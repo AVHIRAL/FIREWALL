@@ -24,10 +24,6 @@ for i in ` netstat -tanpu | grep "SYN_RECV" | awk {'print $5'} | cut -f 1 -d ":"
 
 iptables -I INPUT -p tcp -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -m limit --limit 1/sec -j LOG --log-prefix "iptables input" --log-level 6
 
-iptables -I INPUT -p tcp -m tcp --tcp-flags FIN,SYN,RST,ACK SYN -j DROP
-
-sudo iptables -I INPUT -p tcp --syn -m limit --limit 1/s --limit-burst 10 -j DROP
-
 iptables -t mangle -A PREROUTING -m conntrack --ctstate INVALID -j DROP
 
 iptables -t mangle -A PREROUTING -p tcp ! --syn -m conntrack --ctstate NEW -j DROP
